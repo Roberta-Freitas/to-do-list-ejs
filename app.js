@@ -126,21 +126,45 @@ app.post("/", function (req, res) {
 });
 
 
-app.post("/delete", function(req, res) {
+app.post("/delete", function (req, res) {
   const checkedItemId = req.body.checkbox;
+  const listName = req.body.listName;
 
-  Item.findByIdAndRemove(checkedItemId)
-    .then(() => {
-      console.log("Successfully deleted the item.");
-      res.redirect("/");
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  if (listName === "Today") {
+    // Use Item.findByIdAndRemove to delete the item
+    Item.findByIdAndRemove(checkedItemId)
+      .then(() => {
+        console.log("Successfully deleted the item.");
+        res.redirect("/");
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send("Error deleting the item.");
+      });
+  } else {
+    // Use List.findOneAndUpdate to remove the item from the list's items array
+    List.findOneAndUpdate(
+      { name: listName },
+      { $pull: { items: { _id: checkedItemId } } },
+      { new: true } // This ensures you get the updated list document
+    )
+      .then((updatedList) => {
+        if (updatedList) {
+          console.log("Successfully deleted the item.");
+          res.redirect("/" + listName);
+        } else {
+          console.log("List not found.");
+          res.status(404).send("List not found.");
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send("Error deleting the item.");
+      });
+  }
 });
-
 
 
 app.listen(3000, function () {
   console.log("Running on localhost 3000");
-})
+});
