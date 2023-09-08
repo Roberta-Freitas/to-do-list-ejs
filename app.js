@@ -14,8 +14,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
 
-const mongoose = require('mongoose');
-
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
