@@ -13,7 +13,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
 
-mongoose.connect('mongodb://127.0.0.1:27017/todolistDB');
+// mongoose.connect('mongodb://127.0.0.1:27017/todolistDB');
+mongoose.connect('mongodb+srv://admin-roberta:beta0065@cluster0.c9vzdoz.mongodb.net/todolistDB');
 
 // create a schema
 const { Schema } = mongoose;
@@ -166,6 +167,13 @@ app.post("/delete", function (req, res) {
 });
 
 
-app.listen(3000, function () {
-  console.log("Running on localhost 3000");
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 3000;
+}
+app.listen(port);
+
+
+app.listen(port, function () {
+  console.log("Server has started successfully");
 });
