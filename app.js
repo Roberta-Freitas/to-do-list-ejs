@@ -1,7 +1,8 @@
 //jshint esversion:6
 
-const mongoose = require('mongoose');
 require('dotenv').config(); // Load environment variables from .env file
+const mongoose = require('mongoose');
+
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, {
