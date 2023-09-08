@@ -95,16 +95,36 @@ app.get("/:customListName", async function(req, res) {
 });
 
 
-
-app.post("/", function (req, res){
-
+app.post("/", function (req, res) {
   const itemName = req.body.newItem;
+  const listName = req.body.list;
+
   const item = new Item({
     name: itemName
   });
-  item.save();
-  res.redirect("/");
-})
+
+  if (listName === "Today") {
+    item.save();
+    res.redirect("/");
+  } else {
+    List.findOne({ name: listName })
+      .then(foundList => {
+        if (foundList) {
+          foundList.items.push(item);
+          return foundList.save();
+        }
+      })
+      .then(() => {
+        res.redirect("/" + listName);
+      })
+      .catch(err => {
+        console.error(err);
+        // Handle the error appropriately, e.g., send an error response
+        res.status(500).send("Internal Server Error");
+      });
+  }
+});
+
 
 app.post("/delete", function(req, res) {
   const checkedItemId = req.body.checkbox;
