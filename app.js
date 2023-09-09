@@ -14,8 +14,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
 
-const mongoose = require('mongoose');
-
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -171,7 +169,6 @@ app.post("/delete", function (req, res) {
   }
 });
 
-
 let port = process.env.PORT;
 if (port == null || port == "") {
   port = 3000;
@@ -180,3 +177,5 @@ if (port == null || port == "") {
 app.listen(port, function () {
   console.log("Server has started successfully");
 });
+
+
